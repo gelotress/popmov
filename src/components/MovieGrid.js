@@ -35,6 +35,10 @@ export default class MovieGrid extends Component {
 					dispatch.fetchPopular(pages + 1);
 					break;
 				}
+				case "Favorites": {
+					dispatch.fetchFavorites(pages + 1);
+					break;
+				}
 				default: {
 					break;
 				}
@@ -55,6 +59,10 @@ export default class MovieGrid extends Component {
 			}
 			case "Popular": {
 				dispatch.fetchPopular(1);
+				break;
+			}
+			case "Favorites": {
+				dispatch.fetchFavorites(1);
 				break;
 			}
 			default: {

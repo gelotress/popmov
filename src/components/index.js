@@ -1,11 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { accAdd, accLogin } from "./account";
 
 import * as movieActions from "../actions/movieActions";
 import * as detailActions from "../actions/detailActions";
 import MovieGrid from "./MovieGrid";
 import MovieDetail from "./MovieDetail";
+import {
+	getAcc,
+	makeAcc,
+	delAcc,
+	loginAcc,
+	logoutAcc,
+	getLoggedIn
+} from "./Account";
+import { getFavorites } from "./Favorite";
 
 function mapStateToProps(state) {
 	return {
@@ -24,6 +32,9 @@ function mapDispatchToProps(dispatch) {
 		},
 		fetchHighestRated: function (page) {
 			dispatch(movieActions.fetchHighestRated(page));
+		},
+		fetchFavorites: function (page) {
+			dispatch(movieActions.fetchFavorites(page));
 		},
 		fetchDetail: function (movieId) {
 			dispatch(detailActions.fetchDetail(movieId));
@@ -63,9 +74,17 @@ class App extends React.Component {
 		}
 	};
 
-	componentWillMount() {
-		accAdd("User1@email.com", "User1Pass");
-		accLogin("User1@email.com", "User1Pass");
+	handleChangeFavorites = () => {
+		this.setState({ favorites: getFavorites() });
+	};
+
+	componentDidMount() {
+		window.getAcc = getAcc;
+		window.makeAcc = makeAcc;
+		window.delAcc = delAcc;
+		window.loginAcc = loginAcc;
+		window.logoutAcc = logoutAcc;
+		window.getLoggedIn = getLoggedIn;
 	}
 
 	render() {
@@ -73,12 +92,14 @@ class App extends React.Component {
 			<MovieDetail
 				detailReducer={this.props.detailReducer}
 				dispatch={{
-					fetchDetail: this.props.fetchDetail
+					fetchDetail: this.props.fetchDetail,
+					fetchFavorites: this.props.fetchFavorites
 				}}
 				selected={this.state.selected}
 				selectedImg={this.state.selectedImg}
 				selectedTitle={this.state.selectedTitle}
 				handleUnselect={this.handleUnselect}
+				handleChangeFavorites={this.handleChangeFavorites}
 			>
 				<MovieGrid
 					selected={this.state.selected}
@@ -86,9 +107,11 @@ class App extends React.Component {
 					dispatch={{
 						clearMovies: this.props.clearMovies,
 						fetchPopular: this.props.fetchPopular,
-						fetchHighestRated: this.props.fetchHighestRated
+						fetchHighestRated: this.props.fetchHighestRated,
+						fetchFavorites: this.props.fetchFavorites
 					}}
 					handleSelect={this.handleSelect}
+					handleChangeFavorites={this.handleChangeFavorites}
 				/>
 			</MovieDetail>
 		);

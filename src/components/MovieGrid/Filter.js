@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { getLoggedIn, logoutAcc } from "../Account";
 import {
 	Icon,
 	Segment,
@@ -19,7 +20,16 @@ export default class Filter extends Component {
 		this.setState({ viewFilter: !this.state.viewFilter });
 	};
 
+	componentDidMount() {
+		this.setState({ account: getLoggedIn() });
+	}
+
 	render() {
+		const userPart = this.state.account ?
+			this.state.account.replace(/@+.*/, "") :
+			"No user logged in";
+		const userFront = userPart.substring(0, 1);
+
 		const { selected } = this.props;
 		const { filter } = this.props;
 		const { viewFilter } = this.state;
@@ -51,11 +61,21 @@ export default class Filter extends Component {
 					>
 						Popular
 					</Menu.Item>
+					<Menu.Item
+						name="Favorites"
+						active={filter === "Favorites"}
+						onClick={this.props.handleChangeFilter}
+					>
+						Favorites
+					</Menu.Item>
 					<Menu.Item>
-						<Label as="a">
+						<Label as="a" onClick={ () => {
+							this.setState({ account: "" });
+							logoutAcc();
+						} }>
 							Logout
 						</Label>
-						Username@email.com
+						{userPart}
 					</Menu.Item>
 				</Sidebar>
 				<Sidebar.Pusher>
@@ -78,7 +98,7 @@ export default class Filter extends Component {
 									/>
 								</Label>
 								<Label circular color="black">
-									U
+									{userFront}
 								</Label>
 							</Label>
 						</Segment>

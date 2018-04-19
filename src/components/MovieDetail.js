@@ -9,6 +9,7 @@ import {
 } from "semantic-ui-react";
 
 import DetailAccordion from "./MovieDetail/DetailAccordion";
+import { addFavorite, getFavorites, removeFavorite } from "./Favorite";
 
 export default class MovieDetail extends Component {
 	render() {
@@ -18,6 +19,7 @@ export default class MovieDetail extends Component {
 		const {
 			payload: {
 				data: {
+					id,
 					original_title: originalTitle,
 					vote_average: voteAverage,
 					overview,
@@ -27,6 +29,12 @@ export default class MovieDetail extends Component {
 				}
 			}
 		} = this.props.detailReducer;
+		const dispatch = this.props.dispatch;
+		const favorites = getFavorites();
+		const isFavorite = favorites.some(function (item) {
+			return item.id === id;
+		});
+		const heartIcon = isFavorite ? "heart" : "empty heart";
 
 		return (
 			<Sidebar.Pushable as={Segment}>
@@ -49,8 +57,15 @@ export default class MovieDetail extends Component {
 								<Icon name="star" />
 								{voteAverage}
 							</Label>
-							<Label as="a">
-								<Icon name="empty heart" />
+							<Label as="a" onClick={() => {
+								if (isFavorite) {
+									removeFavorite(id);
+								} else {
+									addFavorite(id, img);
+								}
+								this.props.handleChangeFavorites();
+							}}>
+								<Icon name={heartIcon} />
 								Favorite
 							</Label>
 						</Card.Content>

@@ -1,5 +1,7 @@
 import axios from "axios";
 import apiGeneral from "../apiGeneral";
+import { getEntry } from "../components/LocalDatabase";
+import { getLoggedIn } from "../components/Account";
 
 const baseURL = apiGeneral.baseURL;
 const apiKey = apiGeneral.apiKey;
@@ -38,5 +40,21 @@ export function fetchHighestRated(page=1) {
 	return {
 		type: "FETCH_HIGHEST_RATED",
 		payload: axios.get(url)
+	};
+}
+
+export function fetchFavorites(page=1) {
+	const account = getLoggedIn();
+	const favorites = getEntry("Accounts", account).favorites;
+	const pageSize = favorites.length > 20 ? 20 : favorites.length;
+
+	return {
+		type: "FETCH_FAVORITES_FULFILLED",
+		payload: {
+			data: {
+				results: favorites.slice((page - 1) * pageSize, page * pageSize),
+				page: page
+			}
+		}
 	};
 }
