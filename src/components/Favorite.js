@@ -21,8 +21,11 @@ export function addFavorite(id, poster) {
 
 export function getFavorites() {
 	const account = getLoggedIn();
+	const accSet = getEntry("Accounts", account);
 
-	return getEntry("Accounts", account).favorites;
+	const favorites = accSet ? accSet.favorites : accSet;
+
+	return favorites;
 }
 
 export function removeFavorite(id) {

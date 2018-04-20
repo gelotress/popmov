@@ -31,9 +31,9 @@ export default class MovieDetail extends Component {
 		} = this.props.detailReducer;
 		const dispatch = this.props.dispatch;
 		const favorites = getFavorites();
-		const isFavorite = favorites.some(function (item) {
+		const isFavorite = favorites ? favorites.some(function (item) {
 			return item.id === id;
-		});
+		}) : favorites;
 		const heartIcon = isFavorite ? "heart" : "empty heart";
 
 		return (

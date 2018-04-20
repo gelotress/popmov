@@ -45,7 +45,9 @@ export function fetchHighestRated(page=1) {
 
 export function fetchFavorites(page=1) {
 	const account = getLoggedIn();
-	const favorites = getEntry("Accounts", account).favorites;
+	const isAccSet = getEntry("Accounts", account);
+	const accSet = isAccSet ? isAccSet : {};
+	const favorites = accSet.favorites ? accSet.favorites : [];
 	const pageSize = favorites.length > 20 ? 20 : favorites.length;
 
 	return {

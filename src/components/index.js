@@ -79,12 +79,18 @@ class App extends React.Component {
 	};
 
 	componentDidMount() {
+		const user = "User@email.com";
+		const pass = "userPass";
+
 		window.getAcc = getAcc;
 		window.makeAcc = makeAcc;
 		window.delAcc = delAcc;
 		window.loginAcc = loginAcc;
 		window.logoutAcc = logoutAcc;
 		window.getLoggedIn = getLoggedIn;
+
+		makeAcc("User@email.com", "userPass");
+		loginAcc(user, pass);
 	}
 
 	render() {
